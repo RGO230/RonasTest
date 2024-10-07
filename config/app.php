@@ -1,5 +1,7 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+
 return [
 
     /*
@@ -67,10 +69,10 @@ return [
 
     'timezone' => env('APP_TIMEZONE', 'UTC'),
 
-    'providers' => [
-        App\Providers\AppServiceProvider::class,
-        App\Providers\ConnectorServiceProvider::class
-    ],
+//    'providers' => [
+//        App\Providers\AppServiceProvider::class,
+//        App\Providers\ConnectorServiceProvider::class
+//    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -127,5 +129,7 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
+
+
 
 ];

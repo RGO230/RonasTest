@@ -4,17 +4,38 @@ FROM php:8.3-fpm
 ARG user
 ARG uid
 
-# Install system dependencies
+# Устанавливаем необходимые системные зависимости
 RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    libpng-dev \
-    libonig-dev \
+    libcurl4-openssl-dev \
+    pkg-config \
+    libssl-dev \
+    libicu-dev \
+    zlib1g-dev \
+    libpq-dev \
     libxml2-dev \
-    zip \
+    git \
     unzip \
-    libzip-dev
-    
+    libpng-dev \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libonig-dev \
+    libzip-dev \
+    libreadline-dev \
+    libffi-dev \
+    # Устанавливаем зависимости для raphf и propro
+    libtool \
+    autoconf \
+    automake \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql zip intl bcmath soap
+
+RUN pecl install raphf \
+    && docker-php-ext-enable raphf
+
+
+RUN pecl install pecl_http \
+    && docker-php-ext-enable http
+
 RUN docker-php-ext-install soap
 
 # Clear cache
@@ -22,7 +43,7 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd 
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 RUN docker-php-ext-install -j$(nproc) gd
 

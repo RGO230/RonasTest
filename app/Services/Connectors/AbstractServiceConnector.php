@@ -9,19 +9,16 @@ use Illuminate\Support\Arr;
 abstract class AbstractServiceConnector
 {
     public function __construct(
-        protected string $scheme,
-        protected string $host,
-        protected ?string $port = null,
+        protected ?string $host,
     ) {}
 
-    public function constructUrl(string $endpoint, ?array $query = null, ?array $replace = []): string
+        public function constructUrl(string $endpoint, ?array $query = null, ?array $replace = []): string
     {
-        $url = "{$this->scheme}://{$this->host}";
-        $url .= $this->port ? ":{$this->port}" : '';
+        $url = $this->host;
         $endpoint .= $query ? '?' . Arr::query($query) : '';
-
         foreach ($replace as $key => $value) {
             $endpoint = str_replace('{' . $key . '}', (string)$value, $endpoint);
+
         }
 
         return "{$url}{$endpoint}";
