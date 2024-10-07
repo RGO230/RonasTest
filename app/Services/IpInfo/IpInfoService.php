@@ -16,7 +16,7 @@ class IpInfoService implements IpInfoContract
         $this->apiKey = config('ipinfo.api_key');
     }
 
-    public function getInfo(string $ip) :string|Collection
+    public function getInfo(string $ip) : string|Collection|null
     {
             $query = ['access_key' => $this->apiKey];
         try {
@@ -24,12 +24,13 @@ class IpInfoService implements IpInfoContract
                 $this->connector->constructUrl(str_replace('{ip}',"{$ip}",config('ipinfo.get_info'))),
                 $query,
             );
-            if($response->ok()) {
+            if ($response->ok() && isset($response['city'])) {
                 return $response['city'];
             }
+
         }catch (\Exception $error){
-            return collect(response()->json(['message'=>$error->getMessage(),'status'=>$error->getCode()]));
+            return collect(['message' => $error->getMessage(), 'status' => $error->getCode()]);
         }
-        return collect();
+        return collect(['message' => 'Invalid response', 'status' => $response->status()]);
     }
 }

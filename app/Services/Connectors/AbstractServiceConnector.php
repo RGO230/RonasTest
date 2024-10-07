@@ -9,7 +9,7 @@ use Illuminate\Support\Arr;
 abstract class AbstractServiceConnector
 {
     public function __construct(
-        protected ?string $host,
+        protected ?string $host = null,
     ) {}
 
         public function constructUrl(string $endpoint, ?array $query = null, ?array $replace = []): string

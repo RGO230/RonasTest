@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api;
 
+use App\Helpers\ApiWeatherHelper;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,8 +16,8 @@ class Resource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'temperature_celsius' => $this['temp'] - 273,
-            'temperature_fahrenheit' => round($this['temp'] * 1.8 - 459.67),
+            'temperature_celsius' => ApiWeatherHelper::convertKelvinsToCelsius($this['temp']),
+            'temperature_fahrenheit' => ApiWeatherHelper::convertKelvinsToFahrenheit($this['temp']),
             'humidity' => $this['humidity'],
             'rain_possibility' => $this['rain_possibility'],
             'weather' => $this['weather'],

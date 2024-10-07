@@ -6,5 +6,5 @@ use Illuminate\Support\Collection;
 
 interface IpInfoContract
 {
-    public function getInfo(string $ip) :string|Collection;
+    public function getInfo(string $ip) : string|Collection|null;
 }

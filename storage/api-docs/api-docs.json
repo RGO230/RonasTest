@@ -1,0 +1,161 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Documentation",
+        "description": "Documentation API",
+        "contact": {
+            "email": "admin@admin.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/api/v1",
+            "description": "API Server"
+        },
+        {
+            "url": "/",
+            "description": "Session Server"
+        }
+    ],
+    "paths": {
+        "/get-weather": {
+            "get": {
+                "tags": [
+                    "Weather"
+                ],
+                "summary": "Получить данные о погоде в городе",
+                "description": "Этот метод возвращает информацию о текущей погоде для указанного города.",
+                "operationId": "getWeather",
+                "parameters": [
+                    {
+                        "name": "city",
+                        "in": "query",
+                        "description": "Название города для получения данных о погоде",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Voronezh"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "description": "Статус ответа",
+                                            "type": "string",
+                                            "example": "OK"
+                                        },
+                                        "message": {
+                                            "description": "Сообщение ответа",
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "temperature_celsius": {
+                                                    "description": "Температура в градусах Цельсия",
+                                                    "type": "number",
+                                                    "example": 19
+                                                },
+                                                "temperature_fahrenheit": {
+                                                    "description": "Температура в градусах Фаренгейта",
+                                                    "type": "number",
+                                                    "example": 66
+                                                },
+                                                "humidity": {
+                                                    "description": "Влажность в процентах",
+                                                    "type": "number",
+                                                    "example": 67
+                                                },
+                                                "rain_possibility": {
+                                                    "description": "Вероятность дождя в процентах",
+                                                    "type": "number",
+                                                    "example": 0
+                                                },
+                                                "weather": {
+                                                    "description": "Тип погоды",
+                                                    "type": "string",
+                                                    "example": "Облачно"
+                                                },
+                                                "pressure": {
+                                                    "description": "Давление в гПа",
+                                                    "type": "number",
+                                                    "example": 1007
+                                                },
+                                                "wind_side": {
+                                                    "description": "Направление ветра",
+                                                    "type": "string",
+                                                    "example": "Юго-восточный"
+                                                },
+                                                "wind_speed": {
+                                                    "description": "Скорость ветра",
+                                                    "type": "string",
+                                                    "example": "4 м/c"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Неверный запрос",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "description": "Статус ответа",
+                                            "type": "string",
+                                            "example": "ERROR"
+                                        },
+                                        "message": {
+                                            "description": "Сообщение об ошибке",
+                                            "type": "string",
+                                            "example": "Кажется, такого города нет"
+                                        },
+                                        "data": {
+                                            "description": "Тело ответа",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Weather",
+            "description": "Weather"
+        }
+    ]
+}
