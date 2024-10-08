@@ -20,12 +20,10 @@ class IpInfoTest extends TestCase
     {
         parent::setUp();
 
-        // Мокаем коннектор
         $connector = $this->createMock(IpInfoConnector::class);
         $connector->method('constructUrl')
             ->willReturn(config('ipinfo.host') . "/{ip}");
 
-        // Инициализируем сервис
         $this->service = new IpInfoService($connector);
     }
 
@@ -37,10 +35,8 @@ class IpInfoTest extends TestCase
             ], 200),
         ]);
 
-        // Выполняем метод
-        $result = $this->service->getInfo('5.101.227.0');
+        $result = $this->service->getInfo(config('ipinfo.mock_ip'));
 
-        // Проверяем, что результат — это строка с названием города
         $this->assertIsString($result);
         $this->assertEquals('Voronezh', $result);
     }
@@ -48,15 +44,15 @@ class IpInfoTest extends TestCase
     public function testGetInfoApiFailure(): void
     {
         Http::fake([
-            config('ipinfo.host') . '/*' => Http::response(null, 500), // Симулируем ошибку на стороне API
+            config('ipinfo.host') . '/*' => Http::response(null, 400), // Симулируем ошибку на стороне API
         ]);
 
-        $service = new IpInfoService(new IpInfoConnector('http://api.ipinfo.com'));
-        $result = $service->getInfo('5.101.227.0');
-        // Проверяем, что результат — это коллекция
+        $service = new IpInfoService(new IpInfoConnector(config('ipinfo.host')));
+
+        $result = $service->getInfo(config('ipinfo.mock_ip'));
+
         $this->assertInstanceOf(Collection::class, $result);
 
-        // Проверяем, что в коллекции присутствуют ключи 'message' и 'status'
         $this->assertArrayHasKey('message', $result->toArray());
         $this->assertArrayHasKey('status', $result->toArray());
     }
