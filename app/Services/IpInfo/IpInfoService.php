@@ -19,7 +19,7 @@ class IpInfoService implements IpInfoContract
     public function getInfo(string $ip) : string|Collection|null
     {
             $query = ['access_key' => $this->apiKey];
-        try {
+
             $response = Http::get(
                 $this->connector->constructUrl(str_replace('{ip}',"{$ip}",config('ipinfo.get_info'))),
                 $query,
@@ -27,10 +27,6 @@ class IpInfoService implements IpInfoContract
             if ($response->ok() && isset($response['city'])) {
                 return $response['city'];
             }
-
-        }catch (\Exception $error){
-            return collect(['message' => $error->getMessage(), 'status' => $error->getCode()]);
-        }
         return collect(['message' => 'Invalid response', 'status' => $response->status()]);
-    }
+}
 }

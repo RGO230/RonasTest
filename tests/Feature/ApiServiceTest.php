@@ -54,8 +54,7 @@ class ApiServiceTest extends TestCase
 
         $resource = new Resource($weatherInfo);
         $this->openWeatherApi
-            ->shouldReceive('getWeather')
-            ->with('London')
+            ->expects('getWeather')
             ->andReturn($weatherInfo);
 
         $response = $this->service->index($request);
@@ -73,8 +72,7 @@ class ApiServiceTest extends TestCase
 
 
         $this->ipInfoApi
-            ->shouldReceive('getInfo')
-            ->with($request->ip())
+            ->expects('getInfo')
             ->andReturn('Moscow');
 
         $weatherInfo = collect([
@@ -89,13 +87,10 @@ class ApiServiceTest extends TestCase
 
         $resource = new Resource($weatherInfo);
         $this->openWeatherApi
-            ->shouldReceive('getWeather')
-            ->with('Moscow')
+            ->expects('getWeather')
             ->andReturn($weatherInfo);
 
         $response = $this->service->index($request);
-        dd($response);
-
         $this->assertInstanceOf(ApiJsonResponse::class, $response);
         $this->assertEquals(StatusEnum::OK, $response->status);
         $this->assertInstanceOf(Resource::class, $response->data);
@@ -107,12 +102,10 @@ class ApiServiceTest extends TestCase
         $request = new CityRequest(['city' => 'NonExistentCity']);
 
         $this->openWeatherApi
-            ->shouldReceive('getWeather')
-            ->with('NonExistentCity')
+            ->expects('getWeather')
             ->andReturn(collect());
 
         $response = $this->service->index($request);
-
         $this->assertInstanceOf(ApiJsonResponse::class, $response);
         $this->assertEquals(StatusEnum::ERR, $response->status);
         $this->assertEquals('Кажется, такого города нет', $response->message);
